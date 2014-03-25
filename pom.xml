@@ -41,7 +41,7 @@
             <properties>
                 <!-- develop properties -->
                 <log4j.level>INFO</log4j.level><!-- log4j级别 -->
-                <log4j.path>/Users/liaozhisong/logs/easysale.log</log4j.path><!-- log日志输出文件 -->
+                <log4j.path>/Users/shared/logs/easysale.log</log4j.path><!-- log日志输出文件 -->
             </properties>
         </profile>
         <profile>
@@ -49,7 +49,7 @@
             <properties>
                 <!-- product properties -->
                 <log4j.level>ERROR</log4j.level><!-- log4j级别 -->
-                <log4j.path>/Users/liaozhisong/logs/easysale.log</log4j.path><!-- log日志输出文件 -->
+                <log4j.path>/Users/shared/logs/easysale.log</log4j.path><!-- log日志输出文件 -->
             </properties>
         </profile>
     </profiles>
