@@ -3,6 +3,7 @@ package cn.easysale.web.mobile.action;
 import cn.easysale.core.entity.Company;
 import cn.easysale.core.service.CompanyService;
 import cn.easysale.core.support.BaseAction;
+import cn.easysale.core.support.Config;
 import cn.easysale.core.support.Page;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class MainAction extends BaseAction {
 
     @RequestMapping(value = "upload", method = RequestMethod.POST)
     public String upload(MultipartFile file) throws IOException {
-        FileUtils.writeByteArrayToFile(new File("/Users/liaozhisong/Documents/" + file.getOriginalFilename()), file.getBytes());
+        FileUtils.writeByteArrayToFile(new File(Config.UPLOAD_PATH + file.getOriginalFilename()), file.getBytes());
         return "main/index";
     }
 }
