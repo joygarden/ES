@@ -13,13 +13,12 @@ import java.util.Properties;
 public class PropertyReader {
 
     private Map<String,String> props = new HashMap<String, String>();
+
+
     public PropertyReader(String file) {
         props = new HashMap<String, String>();
-       // "/config.properties"
         Properties prop = new Properties();
         InputStream in = null;
-
-
         try {
            // in= Object.class.getResourceAsStream(file);
             //in = new ClassPathResource(file).getInputStream();
@@ -43,7 +42,6 @@ public class PropertyReader {
             e.printStackTrace();
         }
     }
-
 
     public String getProperty(String key) {
         return props.get(key);
