@@ -52,8 +52,7 @@ public class UserAction extends BaseAction {
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public String register(User user) {
-        //userService.register(user);
-        userService.addObject(user);
+        userService.addUser(user);
         return "redirect:login";
     }
 }

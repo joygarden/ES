@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService extends BaseService<User> {
 
-    public void register(User user) {
+    public void addUser(User user) {
         PasswordService passwordService = new DefaultPasswordService();
         user.setPassword(passwordService.encryptPassword(user.getPassword()));
         addObject(user);
