@@ -11,6 +11,10 @@ import javax.persistence.Entity;
 public class Guest extends BaseEntity {
     private Long companyId;
 
+    public Guest(Long companyId) {
+        this.companyId = companyId;
+    }
+
     public Long getCompanyId() {
         return companyId;
     }

@@ -102,12 +102,7 @@ public class StatisticsInterceptor extends HandlerInterceptorAdapter {
                 Member member = memberService.findById(Long.parseLong(memberId));
                 if (member != null && member.getCompanyId().intValue() == companyId.intValue()) {
                     //生成member cookie
-                    String memberName = Base64.encodeBase64String(memberId.getBytes());
-                    Cookie cookie = new Cookie(MEMBER_KEY, memberName);
-                    cookie.setMaxAge(100 * 86400);
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
-//
+                    response.addCookie(genCookie(MEMBER_KEY,memberId));
                     //写日志
                     logger.info("STATICS 注册用户第一次访问 " + " companyId=" + companyId);
                     vt.setMember(member);
@@ -124,16 +119,11 @@ public class StatisticsInterceptor extends HandlerInterceptorAdapter {
                 vt.setNew("N");
             } else {
                 // 生产 guest cookie
-                Guest guest = new Guest();
-                guest.setCompanyId(companyId);
+                Guest guest = new Guest(companyId);
                 memberService.addObject(guest);
                 String guestName = "游客" + guest.getId().toString();
                 //写cookie
-                String guestCode = Base64.encodeBase64String(guestName.getBytes());
-                Cookie cookie = new Cookie(GUEST_UKEY, guestCode);
-                cookie.setMaxAge(100 * 86400);
-                cookie.setPath("/");
-                response.addCookie(cookie);
+                response.addCookie(genCookie(GUEST_UKEY,guestName));
                 // 记录日志
                 logger.info("STATICS 游客第一次访问 " + guestName);
                 vt.setVisitorName(guestName);
@@ -142,6 +132,14 @@ public class StatisticsInterceptor extends HandlerInterceptorAdapter {
             visitorTraceService.addVisitorTrace(vt,request.getParameterMap());
         }
         return super.preHandle(request, response, handler);
+    }
+
+    private Cookie genCookie(String type,String name) {
+        String code = Base64.encodeBase64String(name.getBytes());
+        Cookie cookie = new Cookie(type, code);
+        cookie.setMaxAge(100 * 86400);
+        cookie.setPath("/");
+        return cookie;
     }
 
     private String getRealIP(HttpServletRequest request) {

@@ -6,6 +6,7 @@ import cn.easysale.core.util.CityAlphaUtil;
 import cn.easysale.core.util.geo.BaiduIp;
 import cn.easysale.core.util.geo.IPLocator;
 import cn.easysale.core.util.geo.geoip.Location;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -45,7 +46,8 @@ public class VisitorTraceService extends BaseService<VisitorTrace> {
                 String[] value = (String[]) paramMap.get(key);
                 requestUrl += "&" + key + "=" + value[0];
             }
-            requestUrl = vt.getVisitUrl()+"?"+requestUrl.substring(1);
+            requestUrl = StringUtils.isBlank(requestUrl)?
+                    vt.getVisitUrl():vt.getVisitUrl()+"?"+requestUrl.substring(1);
             logger.info("STATICS  getUrlTitle=" + requestUrl);
         }
 
