@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <context:component-scan base-package="cn.easysale.core">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+        <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController" />
+    </context:component-scan>
+    <context:property-placeholder location="classpath:spring-context.properties" />
+
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${datasource.driverClassName}"/>
+        <property name="jdbcUrl" value="${master.datasource.url}"/>
+        <property name="user" value="${master.datasource.username}"/>
+        <property name="password" value="${master.datasource.password}"/>
+        <property name="acquireIncrement" value="${c3p0.acquireIncrement}"/>
+        <property name="initialPoolSize" value="${c3p0.initialPoolSize}"/>
+        <property name="minPoolSize" value="${c3p0.minPoolSize}"/>
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}"/>
+        <property name="maxIdleTime" value="${c3p0.maxIdleTime}"/>
+        <property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}"/>
+        <property name="maxStatements" value="${c3p0.maxStatements}"/>
+        <property name="numHelperThreads" value="${c3p0.numHelperThreads}"/>
+    </bean>
+
+
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="persistenceProvider" ref="persistenceProvider" />
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+        <property name="jpaDialect" ref="jpaDialect" />
+
+        <property name="packagesToScan" value="cn.easysale.core.entity" />
+        <property name="jpaProperties">
+            <props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+				<!-- 是否根据需要每次自动创建数据库 -->
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<!-- 显示Hibernate持久化操作所生成的SQL -->
+				<prop key="hibernate.show_sql">true</prop>
+				<!-- 将SQL脚本进行格式化后再输出 -->
+				<prop key="hibernate.format_sql">false</prop>
+                <prop key="hibernate.max_fetch_depth">3</prop>
+                <prop key="hibernate.jdbc.fetch_size">18</prop>
+                <prop key="hibernate.jdbc.batch_size">10</prop>
+                <prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+                <prop key="hibernate.ejb.naming_strategy" >cn.easysale.core.support.CustomNamingStrategy</prop>
+            </props>
+        </property>
+
+    </bean>
+
+    <!-- 用于指定持久化实现厂商类 -->
+    <bean id="persistenceProvider"
+          class="org.hibernate.jpa.HibernatePersistenceProvider" />
+    <!-- 用于设置JPA实现厂商的特定属性 -->
+    <bean id="jpaVendorAdapter"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="database" value="MYSQL" />
+    </bean>
+    <!-- 用于指定一些高级特性 -->
+    <bean id="jpaDialect"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+
+
+    <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED" />
+            <tx:method name="add*" propagation="REQUIRED" />
+            <tx:method name="create*" propagation="REQUIRED" />
+            <tx:method name="insert*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="merge*" propagation="REQUIRED" />
+            <tx:method name="del*" propagation="REQUIRED" />
+            <tx:method name="remove*" propagation="REQUIRED" />
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="count*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="find*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="list*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="*" propagation="REQUIRED" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+    <aop:config expose-proxy="true">
+        <!-- 只对业务逻辑层实施事务 -->
+        <aop:pointcut id="txPointcut" expression="execution(* cn.easysale.core.*.*Service.*(..))" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+    </aop:config>
+
+</beans>
