@@ -22,7 +22,7 @@ package cn.easysale.core.util.geo.geoip;
 
 /**
  * Represents a country.
- * 
+ *
  * @author Matt Tucker
  */
 public class Country {

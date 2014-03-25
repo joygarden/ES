@@ -1,14 +1,9 @@
 package cn.easysale.core.entity;
 
 import cn.easysale.core.support.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.

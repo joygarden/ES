@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 public class VisitorTraceService extends BaseService<VisitorTrace> {
 
-    public void addVisitorTrace(VisitorTrace vt,Map paramMap) {
+    public void addVisitorTrace(VisitorTrace vt, Map paramMap) {
         try {
             BigDecimal[] location = BaiduIp.getLocation(vt.getVisitIp());
             if (location != null) {
@@ -41,16 +41,15 @@ public class VisitorTraceService extends BaseService<VisitorTrace> {
 
         if (paramMap != null) {
             String requestUrl = "";
-            for(Object obj : paramMap.keySet()) {
+            for (Object obj : paramMap.keySet()) {
                 String key = String.valueOf(obj);
                 String[] value = (String[]) paramMap.get(key);
                 requestUrl += "&" + key + "=" + value[0];
             }
-            requestUrl = StringUtils.isBlank(requestUrl)?
-                    vt.getVisitUrl():vt.getVisitUrl()+"?"+requestUrl.substring(1);
+            requestUrl = StringUtils.isBlank(requestUrl) ?
+                    vt.getVisitUrl() : vt.getVisitUrl() + "?" + requestUrl.substring(1);
             logger.info("STATICS  getUrlTitle=" + requestUrl);
         }
-
 
 
         addObject(vt);

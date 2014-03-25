@@ -2,7 +2,10 @@ package cn.easysale.core.entity;
 
 import cn.easysale.core.support.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 
 /**
@@ -170,7 +173,7 @@ public class VisitorTrace extends BaseEntity {
         this.latitude = latitude;
     }
 
-    @ManyToOne(cascade= CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
     public Member getMember() {
         return member;

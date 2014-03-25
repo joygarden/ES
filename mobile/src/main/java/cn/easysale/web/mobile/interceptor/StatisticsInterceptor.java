@@ -37,22 +37,22 @@ public class StatisticsInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String path = request.getContextPath();
-        String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-        request.setAttribute("basePath",basePath);
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+        request.setAttribute("basePath", basePath);
 
         String requestUrl = request.getRequestURL().toString();
         String requestUri = request.getRequestURI();
         String remoteIp = getRealIP(request);
         String userAgent = request.getHeader("User-Agent");
         String source = request.getParameter("source");
-        if(!("sina".equals(source)||"tencent".equals(source)
-                ||"renren".equals(source)||"douban".equals(source)
-                ||"douban".equals(source)||"qzone".equals(source)
-                ||"qzone".equals(source)||"wxsession".equals(source)
-                ||"wxsession".equals(source)||"email".equals(source))) {
+        if (!("sina".equals(source) || "tencent".equals(source)
+                || "renren".equals(source) || "douban".equals(source)
+                || "douban".equals(source) || "qzone".equals(source)
+                || "qzone".equals(source) || "wxsession".equals(source)
+                || "wxsession".equals(source) || "email".equals(source))) {
             source = "";
         }
-        if(isKeyUrl(requestUrl)) {
+        if (isKeyUrl(requestUrl)) {
             String clientUA = request.getParameter("clientUA");
             String memberId = request.getParameter("memberId");
             String userId = request.getParameter("userId");
@@ -75,10 +75,10 @@ public class StatisticsInterceptor extends HandlerInterceptorAdapter {
                     String cookieName = coo.getName();
                     String cookieValue = coo.getValue();
                     logger.info("STATICS cookieName=" + cookieName + " cookieValue=" + cookieValue);
-                    if(MEMBER_KEY.equals(cookieName)) {
+                    if (MEMBER_KEY.equals(cookieName)) {
                         memberCookie = cookieValue;
                     }
-                    if(GUEST_UKEY.equals(cookieName)) {
+                    if (GUEST_UKEY.equals(cookieName)) {
                         guestCookie = cookieValue;
                     }
                 }
@@ -87,7 +87,7 @@ public class StatisticsInterceptor extends HandlerInterceptorAdapter {
             }
             Long companyId = vt.getCompanyId();
 
-            if(StringUtils.isNotBlank(memberCookie)) {
+            if (StringUtils.isNotBlank(memberCookie)) {
                 String memberIdStr = new String(Base64.decodeBase64(memberCookie));
                 Member member = memberService.findById(Long.parseLong(memberIdStr));
                 if (member != null && member.getCompanyId().intValue() == companyId.intValue()) {
@@ -98,11 +98,11 @@ public class StatisticsInterceptor extends HandlerInterceptorAdapter {
                 } else {
                     logger.info("STATICS 注册用户访问 但非本项目客户" + memberIdStr + " companyId=" + companyId);
                 }
-            } else if(StringUtils.isNotBlank(memberId)) {
+            } else if (StringUtils.isNotBlank(memberId)) {
                 Member member = memberService.findById(Long.parseLong(memberId));
                 if (member != null && member.getCompanyId().intValue() == companyId.intValue()) {
                     //生成member cookie
-                    response.addCookie(genCookie(MEMBER_KEY,memberId));
+                    response.addCookie(genCookie(MEMBER_KEY, memberId));
                     //写日志
                     logger.info("STATICS 注册用户第一次访问 " + " companyId=" + companyId);
                     vt.setMember(member);
@@ -111,7 +111,7 @@ public class StatisticsInterceptor extends HandlerInterceptorAdapter {
                 } else {
                     logger.info("STATICS 注册用户访问 但非本项目客户" + memberId + " companyId=" + companyId);
                 }
-            } else if(StringUtils.isNotBlank(guestCookie)) {
+            } else if (StringUtils.isNotBlank(guestCookie)) {
                 //有 写日志
                 String guestName = new String(Base64.decodeBase64(guestCookie));
                 logger.info("STATICS 老游客访问 " + guestName);
@@ -123,18 +123,18 @@ public class StatisticsInterceptor extends HandlerInterceptorAdapter {
                 memberService.addObject(guest);
                 String guestName = "游客" + guest.getId().toString();
                 //写cookie
-                response.addCookie(genCookie(GUEST_UKEY,guestName));
+                response.addCookie(genCookie(GUEST_UKEY, guestName));
                 // 记录日志
                 logger.info("STATICS 游客第一次访问 " + guestName);
                 vt.setVisitorName(guestName);
                 vt.setNew("Y");
             }
-            visitorTraceService.addVisitorTrace(vt,request.getParameterMap());
+            visitorTraceService.addVisitorTrace(vt, request.getParameterMap());
         }
         return super.preHandle(request, response, handler);
     }
 
-    private Cookie genCookie(String type,String name) {
+    private Cookie genCookie(String type, String name) {
         String code = Base64.encodeBase64String(name.getBytes());
         Cookie cookie = new Cookie(type, code);
         cookie.setMaxAge(100 * 86400);

@@ -14,11 +14,11 @@ import java.util.Map;
  */
 @Service
 public class CompanyService extends BaseService<Company> {
-    public Page<Company> findCompanyList(Company company,Page page) {
+    public Page<Company> findCompanyList(Company company, Page page) {
         String hql = "select name from Company where name like :name and style= :style and id in(:ids) order by id";
-        Map<String,Object> params = new HashMap<String, Object>();
-        params.put("name","%"+company.getName()+"%");
-        params.put("style","a");
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", "%" + company.getName() + "%");
+        params.put("style", "a");
         params.put("ids", Arrays.asList(new Object[]{3l, 4l, 13l}));
         return pagedQuery(hql, page, params);
     }

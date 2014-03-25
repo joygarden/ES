@@ -19,7 +19,7 @@
 package cn.easysale.core.support;
 
 import cn.easysale.core.entity.User;
-import cn.easysale.core.service.*;
+import cn.easysale.core.service.UserService;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.shiro.authc.*;
@@ -57,27 +57,27 @@ public class ShiroDbRealm extends AuthorizingRealm {
             UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
             String userName = token.getUsername();
             String plainPassword = String.valueOf(token.getPassword());
-            if( userName != null && !"".equals(userName) ){
-                User user = userService.findUniqueBy("username",token.getUsername());
-                if( user != null ) {
+            if (userName != null && !"".equals(userName)) {
+                User user = userService.findUniqueBy("username", token.getUsername());
+                if (user != null) {
                     PasswordService passwordService = new DefaultPasswordService();
-                    if(passwordService.passwordsMatch(plainPassword, user.getPassword())){
+                    if (passwordService.passwordsMatch(plainPassword, user.getPassword())) {
                         return new SimpleAuthenticationInfo(
-                                user.getUsername(),plainPassword, getName());
+                                user.getUsername(), plainPassword, getName());
                     }
                 }
 
             }
         } catch (NoResultException e) {
-            RuntimeException re = new RuntimeException("用户名不存在！",e);
-            logger.error(re.getMessage(),re);
+            RuntimeException re = new RuntimeException("用户名不存在！", e);
+            logger.error(re.getMessage(), re);
             throw re;
-        }  catch (NonUniqueResultException e){
-            RuntimeException re = new RuntimeException("存在重名用户！",e);
-            logger.error(re.getMessage(),re);
+        } catch (NonUniqueResultException e) {
+            RuntimeException re = new RuntimeException("存在重名用户！", e);
+            logger.error(re.getMessage(), re);
             throw re;
-        } catch (Exception e){
-            logger.error("",e);
+        } catch (Exception e) {
+            logger.error("", e);
         }
 
         throw new RuntimeException("密码错误！");
@@ -89,7 +89,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
-        User user = userService.findUniqueBy("username",shiroUser.getUsername());
+        User user = userService.findUniqueBy("username", shiroUser.getUsername());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         info.addRoles(user.getRoleList());
         return info;

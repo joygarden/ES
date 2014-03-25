@@ -13,10 +13,10 @@ import java.util.Map;
 @RequestMapping("/rest/main")
 public class MainRestAction {
     @RequestMapping("/index")
-    public Map<String,String> index() {
-        Map<String,String> map = new HashMap<String, String>();
-        map.put("aa","bb");
-        map.put("cc","dd");
+    public Map<String, String> index() {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("aa", "bb");
+        map.put("cc", "dd");
         return map;
     }
 }

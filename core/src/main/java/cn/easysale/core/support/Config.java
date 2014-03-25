@@ -2,12 +2,6 @@ package cn.easysale.core.support;
 
 import cn.easysale.core.util.PropertyReader;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
 /**
  * Created by liaozhisong on 3/23/14.
  */

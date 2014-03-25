@@ -27,17 +27,17 @@ public class MainAction extends BaseAction {
     private CompanyService companyService;
 
     @RequestMapping("/index")
-    public String index(Page page,Model model) {
+    public String index(Page page, Model model) {
         Company company = new Company();
         company.setName("bbb");
         companyService.addObject(company);
         logger.info("create time:" + company.getCreateDate());
         List<Company> list = companyService.findAll();
-        logger.info("list1:"+list.size());
+        logger.info("list1:" + list.size());
 
         Company cc = new Company();
         cc.setName("b");
-        Page<Company> companyPage = companyService.findCompanyList(cc,page);
+        Page<Company> companyPage = companyService.findCompanyList(cc, page);
         logger.info("list2:" + companyPage.getData().size());
 
         model.addAttribute("message", companyPage);

@@ -60,7 +60,6 @@ public class IP138Locator {
             info = getDescption(content);
 
 
-
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取title失败", e);
@@ -111,8 +110,8 @@ public class IP138Locator {
             str[1] = title.trim();
         }
 
-        if("-1".equals(str[0])) {
-       for (String aa : CityAlphaUtil.provences) {
+        if ("-1".equals(str[0])) {
+            for (String aa : CityAlphaUtil.provences) {
                 if (str[1].indexOf(aa) >= 0) {
                     str[0] = aa;
                     str[1] = str[1].replace(aa, "").trim();

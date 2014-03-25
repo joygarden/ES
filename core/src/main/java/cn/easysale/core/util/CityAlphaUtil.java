@@ -29,33 +29,30 @@ public class CityAlphaUtil {
 
         String[] info = IP138Locator.parserIp(visitIp);
 
-        if("北京市".equals(info[0])||"北京市区".equals(info[0])||"上海市".equals(info[0])||"天津市".equals(info[0])||"重庆市".equals(info[0]))
-        {
-           ut.setProvince(info[0]);
+        if ("北京市".equals(info[0]) || "北京市区".equals(info[0]) || "上海市".equals(info[0]) || "天津市".equals(info[0]) || "重庆市".equals(info[0])) {
+            ut.setProvince(info[0]);
         }
 
         ut.setArea(info[1] == null ? "" : info[1]);
         ut.setProvince(info[0] == null ? "" : info[0]);
 
-        if (ut.getArea()==null||ut.getArea().equals("")) {
+        if (ut.getArea() == null || ut.getArea().equals("")) {
             Location location = IPLocator.getLoaction(visitIp);
 
-            if(location == null ||  location.city == null||location.city.equals("")){
-                 ut.setArea("");
-            }
-            else if (location.city.equalsIgnoreCase("Hebei")||location.city.equalsIgnoreCase("GUIZHOU")) {
+            if (location == null || location.city == null || location.city.equals("")) {
+                ut.setArea("");
+            } else if (location.city.equalsIgnoreCase("Hebei") || location.city.equalsIgnoreCase("GUIZHOU")) {
                 ut.setArea(CityAlphaUtil.getCityName(location.city).trim());
-            }else if(CityAlphaUtil.getCityName(location.city)!=null){
-                 ut.setArea(CityAlphaUtil.getCityName(location.city).trim()+"市");
-            }else
-             {
+            } else if (CityAlphaUtil.getCityName(location.city) != null) {
+                ut.setArea(CityAlphaUtil.getCityName(location.city).trim() + "市");
+            } else {
                 ut.setArea("");
             }
         }
     }
 
     static {
-         provenceCity.add("北京市");
+        provenceCity.add("北京市");
         provenceCity.add("上海市");
         provenceCity.add("天津市");
         provenceCity.add("重庆市");
@@ -94,8 +91,6 @@ public class CityAlphaUtil {
         provences.add("海南省");
         provences.add("西藏自治区");
         provences.add("新疆维吾尔自治区");
-
-
 
 
         cityAlpha.put("BEIJING", "北京");
@@ -544,7 +539,7 @@ public class CityAlphaUtil {
 //        cityAlpha.put("ZHONGXIN","高碑店");
     }
 
-    public static String getCity(String alpha){
+    public static String getCity(String alpha) {
         String city = null;
         if (alpha == null || alpha.equals("") || alpha.equals("unknow")) {
             city = "";
